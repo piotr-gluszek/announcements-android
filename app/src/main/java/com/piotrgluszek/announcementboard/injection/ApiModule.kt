@@ -3,25 +3,29 @@ package com.piotrgluszek.announcementboard.injection
 import android.app.Application
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
-import android.util.Log
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.piotrgluszek.announcementboard.auth.TokenStorage
 import com.piotrgluszek.announcementboard.communication.AnnouncementsApi
+import com.piotrgluszek.announcementboard.dto.ApiMessage
 import dagger.Module
 import dagger.Provides
 import okhttp3.Cache
 import okhttp3.OkHttpClient
+import okhttp3.ResponseBody
+import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Converter
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 @Module
-class ApiModule(val application : Application) {
+class ApiModule(val application: Application) {
 
     @Provides
     @Singleton
-    fun providesSharedPreferences(): //Application reference must come from AppModule.class
+    fun providesSharedPreferences():
             SharedPreferences {
         return PreferenceManager.getDefaultSharedPreferences(application)
     }
@@ -46,17 +50,36 @@ class ApiModule(val application : Application) {
     fun provideOkHttpClient(cache: Cache): OkHttpClient {
         val client = OkHttpClient.Builder()
         client.cache(cache)
+        client.addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
         return client.build()
     }
 
     @Provides
     @Singleton
-    fun provideApi(gson: Gson, okHttpClient: OkHttpClient): AnnouncementsApi {
+    fun provideRetrofit(gson: Gson, okHttpClient: OkHttpClient): Retrofit {
 
-            return Retrofit.Builder()
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .baseUrl("http://192.168.1.246:8181")
-                .client(okHttpClient)
-                .build().create(AnnouncementsApi::class.java)
+        return Retrofit.Builder()
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .baseUrl("http://192.168.1.246:8181")
+            .client(okHttpClient)
+            .build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideApi(retrofit: Retrofit): AnnouncementsApi {
+        return retrofit.create(AnnouncementsApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideTokenStorage(sharedPreferences: SharedPreferences): TokenStorage {
+        return TokenStorage(null, application.applicationContext, sharedPreferences)
+    }
+
+    @Provides
+    @Singleton
+    fun provideApiMessageConverter(retrofit: Retrofit): Converter<ResponseBody, ApiMessage> {
+        return retrofit.responseBodyConverter(ApiMessage::class.java, emptyArray());
     }
 }

@@ -13,4 +13,7 @@
     <string name="txt_in_phone">phone</string>
     <string name="txt_in_mail">mail</string>
     <string name="btn_submit">SUBMIT</string>
+    <string name="dateFormat">dd/MM/yyyy</string>
+
+    <string name="jwt">jwt</string>
 </resources>

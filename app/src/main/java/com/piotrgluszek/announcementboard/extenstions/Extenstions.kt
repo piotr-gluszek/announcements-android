@@ -1,7 +1,6 @@
 package com.piotrgluszek.announcementboard.extenstions
 
 import java.sql.Date
-import java.sql.Timestamp
 import java.text.SimpleDateFormat
 
 fun String?.replaceIfEmpty(replacement: String?): String? {
@@ -10,8 +9,8 @@ fun String?.replaceIfEmpty(replacement: String?): String? {
     return this
 }
 
-fun Timestamp.formattedDateString(format: String): String {
+fun Long.formattedDateString(format: String): String {
     val sdf = SimpleDateFormat(format)
-    val date = Date(this.nanos * 1000L)
+    val date = Date(this)
     return sdf.format(date)
 }

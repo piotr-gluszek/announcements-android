@@ -13,6 +13,9 @@ import com.piotrgluszek.announcementboard.communication.AnnouncementsApi
 import com.piotrgluszek.announcementboard.dto.Announcement
 import com.piotrgluszek.announcementboard.dto.ApiMessage
 import com.piotrgluszek.announcementboard.dto.Page
+import com.piotrgluszek.announcementboard.injection.ApiComponent
+import com.piotrgluszek.announcementboard.injection.ApiModule
+import com.piotrgluszek.announcementboard.injection.DaggerApiComponent
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
@@ -40,6 +43,7 @@ class Board : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_board)
+        getApiComponent().inject(this)
         listView = findViewById(R.id.announcements_list)
         announcementApi.getAllAnnouncements().enqueue(object : Callback<Page<Announcement>> {
             override fun onFailure(call: Call<Page<Announcement>>, t: Throwable) {
@@ -64,5 +68,8 @@ class Board : AppCompatActivity() {
                 }
             }
         })
+    }
+    private fun getApiComponent(): ApiComponent {
+        return DaggerApiComponent.builder().apiModule(ApiModule(application)).build();
     }
 }

@@ -6,6 +6,7 @@ import android.preference.PreferenceManager
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.piotrgluszek.announcementboard.auth.AuthInterceptor
 import com.piotrgluszek.announcementboard.auth.TokenStorage
 import com.piotrgluszek.announcementboard.communication.AnnouncementsApi
 import com.piotrgluszek.announcementboard.dto.ApiMessage
@@ -47,10 +48,11 @@ class ApiModule(val application: Application) {
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(cache: Cache): OkHttpClient {
+    fun provideOkHttpClient(cache: Cache, tokenStorage: TokenStorage): OkHttpClient {
         val client = OkHttpClient.Builder()
         client.cache(cache)
         client.addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
+        client.addInterceptor(AuthInterceptor(tokenStorage))
         return client.build()
     }
 

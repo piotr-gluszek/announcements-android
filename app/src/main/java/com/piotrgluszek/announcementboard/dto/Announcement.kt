@@ -5,8 +5,8 @@ import java.sql.Timestamp
 class Announcement(val id : Long,
                    val title : String,
                    val description : String,
-                   val announcer : String,
+                   val announcer : User,
                    val categories : List<Category>,
                    val views : Long,
-                   val date : Timestamp,
+                   val date : Long,
                    val photo : String)

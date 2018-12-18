@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.widget.ListView
 import android.widget.Toast
+import com.google.gson.Gson
 import com.piotrgluszek.announcementboard.R
 import com.piotrgluszek.announcementboard.adapters.AnnouncementListAdapter
 import com.piotrgluszek.announcementboard.auth.TokenStorage
@@ -36,6 +37,8 @@ class Board : AppCompatActivity() {
     lateinit var tokenStorage: TokenStorage
     @Inject
     lateinit var converter: Converter<ResponseBody, ApiMessage>
+    @Inject
+    lateinit var gson: Gson
 
     private lateinit var listView: ListView
     var announcements: ArrayList<Announcement>? = null
@@ -68,7 +71,15 @@ class Board : AppCompatActivity() {
                 }
             }
         })
+
+        listView.setOnItemClickListener { _, _, position, _ ->
+            val intent = Intent(this@Board, SingleAnnouncement::class.java)
+            val serializedAnnouncement = gson.toJson(announcements?.get(position))
+            intent.putExtra("selectedAnnouncement", serializedAnnouncement)
+            startActivity(intent)
+        }
     }
+
     private fun getApiComponent(): ApiComponent {
         return DaggerApiComponent.builder().apiModule(ApiModule(application)).build();
     }

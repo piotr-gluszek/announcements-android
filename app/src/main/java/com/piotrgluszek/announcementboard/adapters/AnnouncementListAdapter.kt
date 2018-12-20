@@ -53,7 +53,7 @@ class AnnouncementListAdapter(val context: Context, val resource: Int, val dataS
 
         val announcement = getItem(position) as Announcement
         title.text = announcement.title
-        date.text = announcement.date.formattedDateString(context.resources.getString(R.string.dateFormat))
+        date.text = announcement.date?.formattedDateString(context.resources.getString(R.string.dateFormat))
         if (announcement.photo != null) photo.setImageBitmap(ImageConverter.fromBase64(announcement.photo))
         else photo.setImageResource(R.drawable.image_placeholder)
 

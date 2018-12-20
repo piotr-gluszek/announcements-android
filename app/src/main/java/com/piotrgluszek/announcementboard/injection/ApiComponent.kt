@@ -6,7 +6,7 @@ import com.piotrgluszek.announcementboard.view.*
 import dagger.Component
 import javax.inject.Singleton
 
-@Component(modules = [ApiModule::class])
+@Component(modules = [ApiModule::class, AppModule::class])
 @Singleton
 interface ApiComponent {
     fun inject(login: Login)

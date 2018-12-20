@@ -12,10 +12,12 @@ class TokenStorage(var token: String?, var context: Context, val sharedPreferenc
     }
 
     fun store(token: String?) {
+        this.token = token
         sharedPreferences.edit().putString(context.resources.getString(R.string.jwt), token).apply()
-        Log.d(LOG_TAG, String.format(TOKEN_STORED_TEXT, token))
+        Log.d(LOG_TAG, String.format(TOKEN_STORED_TEXT, this.token))
     }
     fun remove(){
         sharedPreferences.edit().remove(context.resources.getString(R.string.jwt)).apply()
+        this.token = null
     }
 }

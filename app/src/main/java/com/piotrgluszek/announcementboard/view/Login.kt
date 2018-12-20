@@ -13,6 +13,7 @@ import com.piotrgluszek.announcementboard.dto.ApiMessage
 import com.piotrgluszek.announcementboard.dto.Credentials
 import com.piotrgluszek.announcementboard.injection.ApiComponent
 import com.piotrgluszek.announcementboard.injection.ApiModule
+import com.piotrgluszek.announcementboard.injection.App
 import com.piotrgluszek.announcementboard.injection.DaggerApiComponent
 import kotlinx.android.synthetic.main.acrivity_login.*
 import okhttp3.ResponseBody
@@ -38,7 +39,7 @@ class Login : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.acrivity_login)
-        getApiComponent().inject(this)
+        getApiComponent()?.inject(this)
         register_link.setOnClickListener {
             val intent = Intent(this@Login, Registration::class.java)
             startActivity(intent)
@@ -46,6 +47,11 @@ class Login : AppCompatActivity() {
         log_in.setOnClickListener {
             attemptLogin(username.text.toString(), password.text.toString())
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        password.text.clear()
     }
 
     private fun attemptLogin(username: String, password: String) {
@@ -72,7 +78,8 @@ class Login : AppCompatActivity() {
         })
     }
 
-    private fun getApiComponent(): ApiComponent {
-        return DaggerApiComponent.builder().apiModule(ApiModule(application)).build();
+    private fun getApiComponent(): ApiComponent? {
+        return App.component
+        //DaggerApiComponent.builder().apiModule(ApiModule(application)).build();
     }
 }

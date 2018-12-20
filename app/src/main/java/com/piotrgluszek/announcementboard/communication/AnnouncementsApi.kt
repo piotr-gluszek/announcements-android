@@ -16,7 +16,7 @@ interface AnnouncementsApi {
     fun register(@Body registrationData: RegistrationData): Call<Any>
 
     @PUT("/announcements/{id}")
-    fun updateAnnoncement(@Path("id") id: Long): Call<Announcement>
+    fun updateAnnoncement(@Path("id") id: Long, @Body updatedAnnouncement: Announcement): Call<Announcement>
 
 
 }

@@ -10,7 +10,7 @@ class AuthInterceptor(val tokenStorage: TokenStorage) : Interceptor {
         var request = chain.request()
         if (tokenStorage.token != null) {
             request = request.newBuilder()
-                .addHeader("Authorization", tokenStorage.token).build()
+                .addHeader("Authorization", "Bearer " + tokenStorage.token).build()
         }
         return chain.proceed(request)
     }

@@ -13,11 +13,10 @@ import com.piotrgluszek.announcementboard.R
 import com.piotrgluszek.announcementboard.adapters.AnnouncementListAdapter
 import com.piotrgluszek.announcementboard.communication.AnnouncementsApi
 import com.piotrgluszek.announcementboard.dto.Announcement
-import com.piotrgluszek.announcementboard.dto.ApiMessage
+import com.piotrgluszek.announcementboard.extenstions.toast
 import com.piotrgluszek.announcementboard.image.ImageConverter
 import com.piotrgluszek.announcementboard.injection.ApiComponent
-import com.piotrgluszek.announcementboard.injection.ApiModule
-import com.piotrgluszek.announcementboard.injection.DaggerApiComponent
+import com.piotrgluszek.announcementboard.injection.App
 import kotlinx.android.synthetic.main.activity_edit_announcement.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -39,18 +38,18 @@ class EditAnnouncementActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_announcement)
-        getApiComponent().inject(this)
+        getApiComponent()?.inject(this)
         val serializedAnnouncement = intent.getStringExtra(AnnouncementListAdapter.JSON_ANNOUNCEMENT)
         announcement = deserializeAnnouncement(serializedAnnouncement)
         setView(announcement)
     }
 
-    private fun getApiComponent(): ApiComponent {
-        return DaggerApiComponent.builder().apiModule(ApiModule(application)).build();
+    private fun getApiComponent(): ApiComponent? {
+        return App.component
     }
 
     private fun deserializeAnnouncement(serializedAnnouncement: String): Announcement {
-        return getApiComponent().gson().fromJson(serializedAnnouncement, Announcement::class.java)
+        return gson.fromJson(serializedAnnouncement, Announcement::class.java)
     }
 
     private fun setView(announcemet: Announcement) {
@@ -66,7 +65,7 @@ class EditAnnouncementActivity : AppCompatActivity() {
             startActivityForResult(pickPhoto, PICK_PHOTO)
         }
         save_btn.setOnClickListener {
-
+            getViewData()
         }
     }
 
@@ -88,27 +87,26 @@ class EditAnnouncementActivity : AppCompatActivity() {
         val newDescription = description.text.toString()
 
         val updatedAnnouncement = Announcement(title = newTitle, description = newDescription, photo = newPhoto)
-//        api.updateAnnoncement(announcement.id!!).enqueue(object : Callback<ApiMessage> {
-//            override fun onFailure(call: Call<ApiMessage>, t: Throwable) {
-//                Log.e(Login.LOG_TAG, String.format(Login.REQ_FAIL, t.message), t)
-//                Toast.makeText(this@EditAnnouncementActivity, "Connection problem occurred", Toast.LENGTH_SHORT)
-//            }
-//
-//            override fun onResponse(call: Call<ApiMessage>, response: Response<ApiMessage>) {
-//                when (response.code()) {
-//                    200 -> {
-//                        val token = response.body()?.message
-//                        tokenStorage.store(token)
+        api.updateAnnoncement(announcement.id!!, updatedAnnouncement).enqueue(object : Callback<Announcement> {
+            override fun onFailure(call: Call<Announcement>, t: Throwable) {
+                Log.e(Login.LOG_TAG, String.format(Login.REQ_FAIL, t.message), t)
+                Toast.makeText(this@EditAnnouncementActivity, "Connection problem occurred", Toast.LENGTH_SHORT)
+            }
+
+            override fun onResponse(call: Call<Announcement>, response: Response<Announcement>) {
+                when (response.code()) {
+                    200 -> {
+                        toast("Announcement updated")
+                        finish()
 //                        val intent = Intent(this@EditAnnouncementActivity, Board::class.java)
 //                        startActivity(intent)
-//                    }
-//                    403 -> {
-//                        Toast.makeText(this@EditAnnouncementActivity converter.convert(response.errorBody())?.message, Toast.LENGTH_SHORT)
-//                            .show()
-//                    }
-//                }
-//            }
-//        })
+                    }
+                    403 -> {
+                        toast("You shouldn't be here")
+                    }
+                }
+            }
+        })
 
     }
 }

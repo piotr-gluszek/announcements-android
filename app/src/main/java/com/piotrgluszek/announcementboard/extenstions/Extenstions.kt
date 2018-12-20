@@ -1,5 +1,7 @@
 package com.piotrgluszek.announcementboard.extenstions
 
+import android.content.Context
+import android.widget.Toast
 import java.sql.Date
 import java.text.SimpleDateFormat
 
@@ -14,3 +16,6 @@ fun Long.formattedDateString(format: String): String {
     val date = Date(this)
     return sdf.format(date)
 }
+
+fun Context.toast(message: CharSequence) =
+    Toast.makeText(this, message, Toast.LENGTH_SHORT).show()

@@ -1,9 +1,8 @@
 package com.piotrgluszek.announcementboard.injection
 
-import com.piotrgluszek.announcementboard.view.Board
-import com.piotrgluszek.announcementboard.view.Login
-import com.piotrgluszek.announcementboard.view.Registration
-import com.piotrgluszek.announcementboard.view.SingleAnnouncement
+import com.google.gson.Gson
+import com.piotrgluszek.announcementboard.communication.AnnouncementsApi
+import com.piotrgluszek.announcementboard.view.*
 import dagger.Component
 import javax.inject.Singleton
 
@@ -14,5 +13,8 @@ interface ApiComponent {
     fun inject(registration: Registration)
     fun inject(singleAnnouncement: SingleAnnouncement)
     fun inject(board: Board)
+    fun inject(editAnnouncement: EditAnnouncementActivity)
+    fun gson(): Gson
+    fun api(): AnnouncementsApi
 
 }

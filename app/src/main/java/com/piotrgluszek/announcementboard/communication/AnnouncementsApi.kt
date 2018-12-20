@@ -3,9 +3,7 @@ package com.piotrgluszek.announcementboard.communication
 
 import com.piotrgluszek.announcementboard.dto.*
 import retrofit2.Call
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.POST
+import retrofit2.http.*
 
 interface AnnouncementsApi {
     @POST("/login")
@@ -16,6 +14,9 @@ interface AnnouncementsApi {
 
     @POST("/register")
     fun register(@Body registrationData: RegistrationData): Call<Any>
+
+    @PUT("/announcements/{id}")
+    fun updateAnnoncement(@Path("id") id: Long): Call<Announcement>
 
 
 }

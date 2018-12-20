@@ -3,10 +3,10 @@ package com.piotrgluszek.announcementboard.view
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.TextView
-import android.widget.Toast
 import com.google.gson.Gson
 import com.piotrgluszek.announcementboard.R
 import com.piotrgluszek.announcementboard.dto.Announcement
+import com.piotrgluszek.announcementboard.image.ImageConverter
 import com.piotrgluszek.announcementboard.injection.ApiComponent
 import com.piotrgluszek.announcementboard.injection.ApiModule
 import com.piotrgluszek.announcementboard.injection.DaggerApiComponent
@@ -24,8 +24,8 @@ class SingleAnnouncement : AppCompatActivity() {
         getApiComponent().inject(this)
 
         val serializedAnnouncement = intent.getStringExtra("selectedAnnouncement")
-        val announcemet = deserializeAnnouncement(serializedAnnouncement)
-        setView(announcemet)
+        val announcement = deserializeAnnouncement(serializedAnnouncement)
+        setView(announcement)
 
     }
     private fun getApiComponent(): ApiComponent {
@@ -39,9 +39,10 @@ class SingleAnnouncement : AppCompatActivity() {
         val title = findViewById<TextView>(R.id.title)
         title.text = announcemet.title
         description.text = announcemet.description
-        name.text = announcemet.announcer.name
-        mail.text = announcemet.announcer.mail
-        phone.text = announcemet.announcer.phone
-        TODO("Set photo and announcer avatar")
+        name.text = announcemet.announcer?.name
+        mail.text = announcemet.announcer?.mail
+        phone.text = announcemet.announcer?.phone
+        if(announcemet.photo!=null)
+            photo.setImageBitmap(ImageConverter.fromBase64(announcemet.photo))
     }
 }

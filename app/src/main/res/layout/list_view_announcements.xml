@@ -11,7 +11,7 @@
         <ImageView
                 android:layout_width="278dp"
                 android:layout_height="wrap_content" tools:srcCompat="@tools:sample/avatars[3]"
-                android:id="@+id/photo" android:layout_weight="1"/>
+                android:id="@+id/photo" android:layout_weight="1" android:adjustViewBounds="true"/>
         <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"

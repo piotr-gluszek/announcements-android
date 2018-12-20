@@ -11,20 +11,36 @@
             android:orientation="vertical"
             android:layout_width="368dp"
             android:layout_height="551dp" tools:layout_editor_absoluteY="8dp" tools:layout_editor_absoluteX="8dp">
+        <Space
+                android:layout_width="match_parent"
+                android:layout_height="10px"/>
         <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="154dp" tools:srcCompat="@tools:sample/avatars[2]"
-                android:id="@+id/photo"/>
+                android:layout_height="154dp" tools:srcCompat="@drawable/image_placeholder"
+                android:id="@+id/photo" app:srcCompat="@drawable/image_placeholder" android:scaleType="fitCenter"
+        />
+        <Space
+                android:layout_width="match_parent"
+                android:layout_height="10px"/>
         <TextView
                 android:text="TextView"
                 android:layout_width="match_parent"
-                android:layout_height="63dp" android:id="@+id/title" tools:text="TITLE" android:textAlignment="center"
+                android:layout_height="wrap_content" android:id="@+id/title"
+                tools:text="TITLE TO LONG TO DISPLAY IN ONE LINE"
+                android:textAlignment="center"
                 android:textSize="36sp" android:textAllCaps="false"/>
+        <Space
+                android:layout_width="match_parent"
+                android:layout_height="20px"/>
         <TextView
                 android:text="TextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:id="@+id/description"
-                tools:text="This is a very cool description of an item being anounced right here by user."/>
+                tools:text="This is a very cool description of an item being anounced right here by user."
+                android:paddingLeft="30dp" android:paddingRight="30dp"/>
+        <Space
+                android:layout_width="match_parent"
+                android:layout_height="20px"/>
         <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
@@ -32,7 +48,8 @@
             <ImageView
                     android:layout_width="244dp"
                     android:layout_height="wrap_content" tools:srcCompat="@tools:sample/avatars[11]"
-                    android:id="@+id/contactPhoto" android:layout_weight="1"/>
+                    android:id="@+id/contactPhoto" android:layout_weight="1"
+                    app:srcCompat="@drawable/user_photo_placeholder"/>
             <LinearLayout
                     android:orientation="vertical"
                     android:layout_width="match_parent"
@@ -53,6 +70,26 @@
                         android:layout_height="wrap_content" android:id="@+id/mail" android:layout_weight="0.75"
                         tools:text="email@mail.ru"/>
             </LinearLayout>
+        </LinearLayout>
+        <Space
+                android:layout_width="match_parent"
+                android:layout_height="20px"/>
+        <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="35dp">
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/date"
+                    android:layout_weight="0.5"
+                    tools:text="Posted: 01-01-2001"/>
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/views"
+                    tools:text="Views: 3"
+                    android:layout_weight="0.5"/>
         </LinearLayout>
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

@@ -43,6 +43,6 @@ class SingleAnnouncement : AppCompatActivity() {
         mail.text = announcemet.announcer?.mail
         phone.text = announcemet.announcer?.phone
         if(announcemet.photo!=null)
-            photo.setImageBitmap(ImageConverter.fromBase64(announcemet.photo))
+            photo.setImageBitmap(ImageConverter.fromBase64(announcemet.photo as String))
     }
 }

@@ -1,31 +1,26 @@
 package com.piotrgluszek.announcementboard.view
 
+import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.provider.MediaStore
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import android.widget.EditText
-import android.widget.Toast
 import com.google.gson.Gson
 import com.piotrgluszek.announcementboard.R
-import com.piotrgluszek.announcementboard.adapters.AnnouncementListAdapter
 import com.piotrgluszek.announcementboard.communication.AnnouncementsApi
 import com.piotrgluszek.announcementboard.dto.Announcement
-import com.piotrgluszek.announcementboard.extenstions.toast
 import com.piotrgluszek.announcementboard.image.ImageConverter
-import com.piotrgluszek.announcementboard.injection.ApiComponent
 import com.piotrgluszek.announcementboard.injection.App
+import com.piotrgluszek.announcementboard.model.AnnouncementsViewModel
 import kotlinx.android.synthetic.main.activity_edit_announcement.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import javax.inject.Inject
 
 
 class EditAnnouncementActivity : AppCompatActivity() {
     companion object {
+        const val ANNOUNCEMENT_JSON = "jsonSerializedAnnouncement"
         const val PICK_PHOTO = 1
     }
 
@@ -33,30 +28,32 @@ class EditAnnouncementActivity : AppCompatActivity() {
     lateinit var gson: Gson
     @Inject
     lateinit var api: AnnouncementsApi
-    lateinit var announcement: Announcement
+    lateinit var announcementViewModel: AnnouncementsViewModel
+    var id: Long = 0
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_announcement)
-        getApiComponent()?.inject(this)
-        val serializedAnnouncement = intent.getStringExtra(AnnouncementListAdapter.JSON_ANNOUNCEMENT)
-        announcement = deserializeAnnouncement(serializedAnnouncement)
-        setView(announcement)
+        App.component.inject(this)
+        if (intent.getStringExtra(Board.ACTION) == Board.ACTION_UPDATE) {
+            id = intent.getLongExtra("id", 0)
+            announcementViewModel = ViewModelProviders.of(this).get(AnnouncementsViewModel::class.java)
+            announcementViewModel.announcements.value?.let {
+                it.filter { a -> a.id == id }.first()?.let {
+                    setView(it)
+                }
+            }
+        }
     }
 
-    private fun getApiComponent(): ApiComponent? {
-        return App.component
-    }
-
-    private fun deserializeAnnouncement(serializedAnnouncement: String): Announcement {
-        return gson.fromJson(serializedAnnouncement, Announcement::class.java)
-    }
-
-    private fun setView(announcemet: Announcement) {
-        if (announcemet.photo != null) photo.setImageBitmap(ImageConverter.fromBase64(announcemet.photo))
+    private fun setView(announcement: Announcement) {
+        announcement.photo?.let {
+            photo.setImageBitmap(ImageConverter.fromBase64(announcement.photo as String))
+        }
         val title = findViewById<EditText>(R.id.title)
-        title.setText(announcemet.title)
-        description.setText(announcemet.description)
+        title.setText(announcement.title)
+        description.setText(announcement.description)
         photo.setOnClickListener {
             val pickPhoto = Intent(
                 Intent.ACTION_PICK,
@@ -65,7 +62,8 @@ class EditAnnouncementActivity : AppCompatActivity() {
             startActivityForResult(pickPhoto, PICK_PHOTO)
         }
         save_btn.setOnClickListener {
-            getViewData()
+            val announcement = getViewData()
+            announcementViewModel.update(id, announcement)
         }
     }
 
@@ -77,7 +75,7 @@ class EditAnnouncementActivity : AppCompatActivity() {
         }
     }
 
-    private fun getViewData() {
+    private fun getViewData(): Announcement {
         val bitmap = (photo.drawable as? BitmapDrawable)?.bitmap
         var newPhoto: String? = null
         if (bitmap != null)
@@ -86,27 +84,6 @@ class EditAnnouncementActivity : AppCompatActivity() {
         val newTitle = title.text.toString()
         val newDescription = description.text.toString()
 
-        val updatedAnnouncement = Announcement(title = newTitle, description = newDescription, photo = newPhoto)
-        api.updateAnnoncement(announcement.id!!, updatedAnnouncement).enqueue(object : Callback<Announcement> {
-            override fun onFailure(call: Call<Announcement>, t: Throwable) {
-                Log.e(Login.LOG_TAG, String.format(Login.REQ_FAIL, t.message), t)
-                Toast.makeText(this@EditAnnouncementActivity, "Connection problem occurred", Toast.LENGTH_SHORT)
-            }
-
-            override fun onResponse(call: Call<Announcement>, response: Response<Announcement>) {
-                when (response.code()) {
-                    200 -> {
-                        toast("Announcement updated")
-                        finish()
-//                        val intent = Intent(this@EditAnnouncementActivity, Board::class.java)
-//                        startActivity(intent)
-                    }
-                    403 -> {
-                        toast("You shouldn't be here")
-                    }
-                }
-            }
-        })
-
+        return Announcement(title = newTitle, description = newDescription, photo = newPhoto)
     }
 }

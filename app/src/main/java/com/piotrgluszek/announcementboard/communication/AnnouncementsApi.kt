@@ -18,5 +18,8 @@ interface AnnouncementsApi {
     @PUT("/announcements/{id}")
     fun updateAnnoncement(@Path("id") id: Long, @Body updatedAnnouncement: Announcement): Call<Announcement>
 
+    @DELETE("/announcements/{id}")
+    fun deleteAnnouncement(@Path("id") id: Long)
+
 
 }

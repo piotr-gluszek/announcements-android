@@ -1,12 +1,12 @@
 package com.piotrgluszek.announcementboard.dto
 
-import java.sql.Timestamp
-
-class Announcement(val id : Long? = null,
-                   val title : String? = null,
-                   val description : String? = null,
-                   val announcer : User? = null,
-                   val categories : List<Category>? = null,
-                   val views : Long? = null,
-                   val date : Long? = null ,
-                   val photo : String? = null)
+class Announcement(
+    var id: Long? = null,
+    var title: String? = null,
+    var description: String? = null,
+    var announcer: User? = null,
+    var categories: List<Category>? = null,
+    var views: Long? = null,
+    var date: Long? = null,
+    var photo: String? = null
+)

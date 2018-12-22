@@ -1,28 +1,22 @@
 package com.piotrgluszek.announcementboard.view
 
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
-import android.widget.ListView
-import android.widget.Toast
 import com.google.gson.Gson
 import com.piotrgluszek.announcementboard.R
 import com.piotrgluszek.announcementboard.adapters.AnnouncementListAdapter
-import com.piotrgluszek.announcementboard.auth.TokenStorage
-import com.piotrgluszek.announcementboard.communication.AnnouncementsApi
 import com.piotrgluszek.announcementboard.dto.Announcement
 import com.piotrgluszek.announcementboard.dto.ApiMessage
-import com.piotrgluszek.announcementboard.dto.Page
-import com.piotrgluszek.announcementboard.injection.ApiComponent
-import com.piotrgluszek.announcementboard.injection.ApiModule
+import com.piotrgluszek.announcementboard.extenstions.toast
 import com.piotrgluszek.announcementboard.injection.App
-import com.piotrgluszek.announcementboard.injection.DaggerApiComponent
+import com.piotrgluszek.announcementboard.model.AnnouncementsViewModel
+import kotlinx.android.synthetic.main.activity_board.*
 import okhttp3.ResponseBody
-import retrofit2.Call
-import retrofit2.Callback
 import retrofit2.Converter
-import retrofit2.Response
 import javax.inject.Inject
 
 class Board : AppCompatActivity() {
@@ -30,87 +24,73 @@ class Board : AppCompatActivity() {
     companion object {
         const val LOG_TAG = "BOARD_ACTIVITY"
         const val REQ_FAIL = "Failed to send request: %s"
+        const val JSON_ANNOUNCEMENT = "jsonSerializedAnnouncement"
+        const val UPDATE_ANNOUNCEMENT = 1
+        const val ID = "id"
+        const val ACTION = "action"
+        const val ACTION_UPDATE = "update"
+        const val ACTION_CREATE = "create"
     }
 
-    @Inject
-    lateinit var announcementApi: AnnouncementsApi
-    @Inject
-    lateinit var tokenStorage: TokenStorage
     @Inject
     lateinit var converter: Converter<ResponseBody, ApiMessage>
     @Inject
     lateinit var gson: Gson
 
-    private lateinit var listView: ListView
-    var announcements: ArrayList<Announcement>? = null
+    private lateinit var announcementsViewModel: AnnouncementsViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_board)
-        getApiComponent()?.inject(this)
-        listView = findViewById(R.id.announcements_list)
-        announcementApi.getAllAnnouncements().enqueue(object : Callback<Page<Announcement>> {
-            override fun onFailure(call: Call<Page<Announcement>>, t: Throwable) {
-                Log.e(LOG_TAG, String.format(REQ_FAIL, t.message), t)
-                Toast.makeText(this@Board, "Connection problem occurred", Toast.LENGTH_SHORT)
-            }
+        App.component.inject(this)
 
-            override fun onResponse(call: Call<Page<Announcement>>, response: Response<Page<Announcement>>) {
-                when (response.code()) {
-                    200 -> {
-                        announcements = response.body()?.content
-                        val adapter =
-                            AnnouncementListAdapter(this@Board, R.layout.list_view_announcements, announcements!!)
-                        listView.adapter = adapter
-                    }
-                    403 -> {
-                        Toast.makeText(this@Board, converter.convert(response.errorBody())?.message, Toast.LENGTH_SHORT)
-                            .show()
-                        val intent = Intent(this@Board, Login::class.java)
-                        startActivity(intent)
-                    }
+        val adapter = AnnouncementListAdapter(
+            this,
+            R.layout.list_view_announcements
+        )
+        announcements_list.adapter = adapter
+
+        announcementsViewModel = ViewModelProviders.of(this).get(AnnouncementsViewModel::class.java)
+        announcementsViewModel.announcements.observe(
+            this, Observer<ArrayList<Announcement>> {
+                toast("There was a change in announcement list")
+                it?.let {
+                    adapter.setAnnouncements(it)
                 }
+                Log.v(LOG_TAG, "Observer notified")
             }
-        })
-
-        listView.setOnItemClickListener { _, _, position, _ ->
-            val intent = Intent(this@Board, SingleAnnouncement::class.java)
-            val serializedAnnouncement = gson.toJson(announcements?.get(position))
-            intent.putExtra("selectedAnnouncement", serializedAnnouncement)
-            startActivity(intent)
-        }
+        )
+        Log.v(LOG_TAG, "ON CREATED EXECUTED")
     }
 
-    override fun onResume() {
-        super.onResume()
-        announcementApi.getAllAnnouncements().enqueue(object : Callback<Page<Announcement>> {
-            override fun onFailure(call: Call<Page<Announcement>>, t: Throwable) {
-                Log.e(LOG_TAG, String.format(REQ_FAIL, t.message), t)
-                Toast.makeText(this@Board, "Connection problem occurred", Toast.LENGTH_SHORT)
-            }
+    fun onListItemEdit(id: Long) {
+        val intent = Intent(this, EditAnnouncementActivity::class.java)
+        intent.putExtra(ID, id)
+        intent.putExtra(ACTION, ACTION_UPDATE)
+        startActivity(intent)
+    }
 
-            override fun onResponse(call: Call<Page<Announcement>>, response: Response<Page<Announcement>>) {
-                when (response.code()) {
-                    200 -> {
-                        announcements = response.body()?.content
-                        val adapter =
-                            AnnouncementListAdapter(this@Board, R.layout.list_view_announcements, announcements!!)
-                        listView.adapter = adapter
-                    }
-                    403 -> {
-                        Toast.makeText(this@Board, converter.convert(response.errorBody())?.message, Toast.LENGTH_SHORT)
-                            .show()
-                        val intent = Intent(this@Board, Login::class.java)
-                        startActivity(intent)
-                    }
-                }
-            }
-        })
+    fun onListItemRemove() {
 
     }
 
-    private fun getApiComponent(): ApiComponent? {
-        return App.component
-
-    }
+//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+//        if (requestCode == UPDATE_ANNOUNCEMENT && resultCode == RESULT_OK) {
+//            val updatedAnnouncement = gson.fromJson(data?.getStringExtra(JSON_ANNOUNCEMENT), Announcement::class.java)
+//
+//            for (announcement in announcementsViewModel.announcements.value as ArrayList<Announcement>) {
+//                if (announcement.id == updatedAnnouncement.id)
+//                    announcementsViewModel.announcements.value
+//
+//            }
+//            val iterator = (announcementsViewModel.announcements.value as ArrayList<Announcement>).listIterator()
+//            while (iterator.hasNext()) {
+//                val next = iterator.next()
+//                if (next.id == updatedAnnouncement.id) {
+//                    iterator.set(updatedAnnouncement)
+//                }
+//            }
+//
+//        }
+//    }
 }

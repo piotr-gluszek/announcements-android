@@ -2,6 +2,7 @@ package com.piotrgluszek.announcementboard.injection
 
 import com.google.gson.Gson
 import com.piotrgluszek.announcementboard.communication.AnnouncementsApi
+import com.piotrgluszek.announcementboard.repositories.AnnouncementRepository
 import com.piotrgluszek.announcementboard.view.*
 import dagger.Component
 import javax.inject.Singleton
@@ -16,5 +17,6 @@ interface ApiComponent {
     fun inject(editAnnouncement: EditAnnouncementActivity)
     fun gson(): Gson
     fun api(): AnnouncementsApi
+    fun repository(): AnnouncementRepository
 
 }

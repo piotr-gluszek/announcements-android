@@ -10,6 +10,7 @@ import com.piotrgluszek.announcementboard.auth.AuthInterceptor
 import com.piotrgluszek.announcementboard.auth.TokenStorage
 import com.piotrgluszek.announcementboard.communication.AnnouncementsApi
 import com.piotrgluszek.announcementboard.dto.ApiMessage
+import com.piotrgluszek.announcementboard.repositories.AnnouncementRepository
 import dagger.Module
 import dagger.Provides
 import okhttp3.Cache
@@ -83,5 +84,11 @@ class ApiModule(val application: Application) {
     @Singleton
     fun provideApiMessageConverter(retrofit: Retrofit): Converter<ResponseBody, ApiMessage> {
         return retrofit.responseBodyConverter(ApiMessage::class.java, emptyArray());
+    }
+
+    @Provides
+    @Singleton
+    fun provideRepo(): AnnouncementRepository {
+        return AnnouncementRepository()
     }
 }

@@ -4,7 +4,7 @@ import android.app.Application
 
 class App : Application() {
     companion object {
-        var component: ApiComponent? = null
+        lateinit var component: ApiComponent
     }
 
     override fun onCreate() {

@@ -1,5 +1,6 @@
 package com.piotrgluszek.announcementboard.extenstions
 
+import android.arch.lifecycle.MutableLiveData
 import android.content.Context
 import android.widget.Toast
 import java.sql.Date
@@ -19,3 +20,7 @@ fun Long.formattedDateString(format: String): String {
 
 fun Context.toast(message: CharSequence) =
     Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+
+fun <T> MutableLiveData<T>.notifyObservers() {
+    this.value = this.value
+}

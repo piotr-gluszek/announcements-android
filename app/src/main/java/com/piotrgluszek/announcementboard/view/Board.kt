@@ -19,6 +19,7 @@ import okhttp3.ResponseBody
 import retrofit2.Converter
 import javax.inject.Inject
 
+
 class Board : AppCompatActivity() {
 
     companion object {
@@ -36,20 +37,15 @@ class Board : AppCompatActivity() {
     lateinit var converter: Converter<ResponseBody, ApiMessage>
     @Inject
     lateinit var gson: Gson
-
     private lateinit var announcementsViewModel: AnnouncementsViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_board)
+
         App.component.inject(this)
-
-        val adapter = AnnouncementListAdapter(
-            this,
-            R.layout.list_view_announcements
-        )
+        val adapter = AnnouncementListAdapter(this, R.layout.list_view_announcements)
         announcements_list.adapter = adapter
-
         announcementsViewModel = ViewModelProviders.of(this).get(AnnouncementsViewModel::class.java)
         announcementsViewModel.announcements.observe(
             this, Observer<ArrayList<Announcement>> {
@@ -74,23 +70,4 @@ class Board : AppCompatActivity() {
 
     }
 
-//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//        if (requestCode == UPDATE_ANNOUNCEMENT && resultCode == RESULT_OK) {
-//            val updatedAnnouncement = gson.fromJson(data?.getStringExtra(JSON_ANNOUNCEMENT), Announcement::class.java)
-//
-//            for (announcement in announcementsViewModel.announcements.value as ArrayList<Announcement>) {
-//                if (announcement.id == updatedAnnouncement.id)
-//                    announcementsViewModel.announcements.value
-//
-//            }
-//            val iterator = (announcementsViewModel.announcements.value as ArrayList<Announcement>).listIterator()
-//            while (iterator.hasNext()) {
-//                val next = iterator.next()
-//                if (next.id == updatedAnnouncement.id) {
-//                    iterator.set(updatedAnnouncement)
-//                }
-//            }
-//
-//        }
-//    }
 }

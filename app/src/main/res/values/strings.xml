@@ -16,5 +16,11 @@
     <string name="dateFormat">dd/MM/yyyy</string>
 
     <string name="jwt">jwt</string>
-    <string name="phone_regex">/d{9}</string>
+
+    <string name="phone_regex">\\d{9}</string>
+    <string name="invalid_phone">Phone number should consist of 9 digits</string>
+    <string name="username_regex">\\w{6,30}</string>
+    <string name="invalid_username">Username should be at least 6 characters long. It can consists letters [A-Z] and
+        digits [0-9]
+    </string>
 </resources>

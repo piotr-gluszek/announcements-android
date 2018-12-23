@@ -1,10 +1,13 @@
 package com.piotrgluszek.announcementboard.view
 
 import android.arch.lifecycle.ViewModelProviders
+import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import br.com.ilhasoft.support.validation.Validator
 import com.piotrgluszek.announcementboard.R
 import com.piotrgluszek.announcementboard.communication.AnnouncementsApi
+import com.piotrgluszek.announcementboard.databinding.ActivityRegistrationBinding
 import com.piotrgluszek.announcementboard.dto.ApiMessage
 import com.piotrgluszek.announcementboard.dto.RegistrationData
 import com.piotrgluszek.announcementboard.enums.Action
@@ -34,9 +37,14 @@ class Registration : AppCompatActivity(), CanReact {
         setContentView(R.layout.activity_registration)
         userViewModel = ViewModelProviders.of(this).get(UserViewModel::class.java)
 
+        val binding: ActivityRegistrationBinding = DataBindingUtil.setContentView(this, R.layout.activity_registration)
+        val validator = Validator(binding)
+
         register_submit.setOnClickListener {
-            val data = getRegistrationData()
-            userViewModel.create(data, this)
+            if(validator.validate()){
+                val data = getRegistrationData()
+                userViewModel.create(data, this)
+            }
 
         }
     }

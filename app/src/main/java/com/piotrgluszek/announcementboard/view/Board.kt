@@ -13,7 +13,7 @@ import com.piotrgluszek.announcementboard.dto.Announcement
 import com.piotrgluszek.announcementboard.dto.ApiMessage
 import com.piotrgluszek.announcementboard.extenstions.toast
 import com.piotrgluszek.announcementboard.injection.App
-import com.piotrgluszek.announcementboard.model.AnnouncementsViewModel
+import com.piotrgluszek.announcementboard.viewmodel.AnnouncementsViewModel
 import kotlinx.android.synthetic.main.activity_board.*
 import okhttp3.ResponseBody
 import retrofit2.Converter

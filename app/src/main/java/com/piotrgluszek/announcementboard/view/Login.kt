@@ -80,6 +80,5 @@ class Login : AppCompatActivity() {
 
     private fun getApiComponent(): ApiComponent? {
         return App.component
-        //DaggerApiComponent.builder().apiModule(ApiModule(application)).build();
     }
 }

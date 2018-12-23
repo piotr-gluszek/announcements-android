@@ -11,6 +11,7 @@ import com.piotrgluszek.announcementboard.auth.TokenStorage
 import com.piotrgluszek.announcementboard.communication.AnnouncementsApi
 import com.piotrgluszek.announcementboard.dto.ApiMessage
 import com.piotrgluszek.announcementboard.repositories.AnnouncementRepository
+import com.piotrgluszek.announcementboard.repositories.UserRepository
 import dagger.Module
 import dagger.Provides
 import okhttp3.Cache
@@ -88,7 +89,12 @@ class ApiModule(val application: Application) {
 
     @Provides
     @Singleton
-    fun provideRepo(): AnnouncementRepository {
+    fun provideAnnouncementsRepo(): AnnouncementRepository {
         return AnnouncementRepository()
+    }
+    @Provides
+    @Singleton
+    fun provideUserRepo(): UserRepository {
+        return UserRepository()
     }
 }

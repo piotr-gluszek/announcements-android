@@ -21,5 +21,4 @@ interface AnnouncementsApi {
     @DELETE("/announcements/{id}")
     fun deleteAnnouncement(@Path("id") id: Long)
 
-
 }

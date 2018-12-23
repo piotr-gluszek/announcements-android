@@ -13,7 +13,7 @@ import com.piotrgluszek.announcementboard.communication.AnnouncementsApi
 import com.piotrgluszek.announcementboard.dto.Announcement
 import com.piotrgluszek.announcementboard.image.ImageConverter
 import com.piotrgluszek.announcementboard.injection.App
-import com.piotrgluszek.announcementboard.model.AnnouncementsViewModel
+import com.piotrgluszek.announcementboard.viewmodel.AnnouncementsViewModel
 import kotlinx.android.synthetic.main.activity_edit_announcement.*
 import javax.inject.Inject
 

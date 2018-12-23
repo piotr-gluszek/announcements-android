@@ -16,4 +16,5 @@
     <string name="dateFormat">dd/MM/yyyy</string>
 
     <string name="jwt">jwt</string>
+    <string name="phone_regex">/d{9}</string>
 </resources>

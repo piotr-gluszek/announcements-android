@@ -103,7 +103,7 @@ class Registration : AppCompatActivity(), CanReact {
         }
     }
 
-    override fun onSuccess(action: Action) {
+    override fun onSuccess(action: Action, data: Any?) {
         when (action) {
             Action.CREATE -> {
                 toast("Account created. You may now log in")

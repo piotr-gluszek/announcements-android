@@ -50,4 +50,9 @@ dependencies {
     implementation "android.arch.lifecycle:extensions:1.1.1"
     implementation "org.jetbrains.anko:anko-commons:0.10.4"
     implementation "com.github.Ilhasoft:data-binding-validator:1.0.0"
+    api 'io.jsonwebtoken:jjwt-api:0.10.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.10.5'
+    runtimeOnly('io.jsonwebtoken:jjwt-orgjson:0.10.5') {
+        exclude group: 'org.json', module: 'json'
+    }
 }

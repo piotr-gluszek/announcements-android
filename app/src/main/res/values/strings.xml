@@ -16,6 +16,7 @@
     <string name="dateFormat">dd/MM/yyyy</string>
 
     <string name="jwt">jwt</string>
+    <string name="jwt_secret">08C4BCCB24E83458641DE6B3C83D21243680115D1A60E0E58614847FFA87AEC7CC3C263044612E3B97CC3B51BB8D9A151C51261371EDBF9E17A57F63F5F57FEB</string>
 
     <string name="phone_regex">\\d{9}</string>
     <string name="invalid_phone">Phone number should consist of 9 digits</string>

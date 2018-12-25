@@ -4,5 +4,6 @@ enum class Action {
     CREATE,
     UPDATE,
     GET_ONE,
-    GET_MULTIPLE
+    GET_MULTIPLE,
+    AUTHENTICATE
 }

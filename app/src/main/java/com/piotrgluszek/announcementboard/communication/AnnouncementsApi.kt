@@ -21,4 +21,7 @@ interface AnnouncementsApi {
     @DELETE("/announcements/{id}")
     fun deleteAnnouncement(@Path("id") id: Long)
 
+    @GET("/users/{id}")
+    fun getUserById(@Path("id") id: Long): Call<User>
+
 }

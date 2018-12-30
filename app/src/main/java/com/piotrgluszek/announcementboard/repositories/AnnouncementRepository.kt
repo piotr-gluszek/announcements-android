@@ -3,6 +3,7 @@ package com.piotrgluszek.announcementboard.repositories
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.util.Log
+import br.com.ilhasoft.support.validation.Validator
 import com.piotrgluszek.announcementboard.dto.Announcement
 import com.piotrgluszek.announcementboard.dto.Page
 import com.piotrgluszek.announcementboard.extenstions.notifyObservers
@@ -47,7 +48,7 @@ class AnnouncementRepository {
 
         api.updateAnnoncement(id, updatedAnnouncement).enqueue(object : Callback<Announcement> {
             override fun onFailure(call: Call<Announcement>, t: Throwable) {
-                Log.e(Login.LOG_TAG, String.format(Login.REQ_FAIL, t.message), t)
+                Log.e(LOG_TAG, String.format(REQ_FAIL, t.message), t)
             }
 
             override fun onResponse(call: Call<Announcement>, response: Response<Announcement>) {
@@ -71,5 +72,24 @@ class AnnouncementRepository {
             }
         }
         announcements.notifyObservers()
+    }
+
+    fun create(announcement: Announcement){
+        api.createAnnouncement(announcement).enqueue(object: Callback<Announcement> {
+            override fun onFailure(call: Call<Announcement>, t: Throwable) {
+                Log.e(LOG_TAG, String.format(REQ_FAIL, t.message), t)
+            }
+
+            override fun onResponse(call: Call<Announcement>, response: Response<Announcement>) {
+                when (response.code()) {
+                    200 -> {
+                        Log.v(LOG_TAG, "Creation successful")
+                    }
+                    403 -> {
+                        Log.e(LOG_TAG, "Creation failed. User not authorized")
+                    }
+                }
+            }
+        })
     }
 }

@@ -11,6 +11,7 @@ import com.piotrgluszek.announcementboard.auth.TokenStorage
 import com.piotrgluszek.announcementboard.communication.AnnouncementsApi
 import com.piotrgluszek.announcementboard.dto.ApiMessage
 import com.piotrgluszek.announcementboard.repositories.AnnouncementRepository
+import com.piotrgluszek.announcementboard.repositories.CategoriesRepository
 import com.piotrgluszek.announcementboard.repositories.UserRepository
 import dagger.Module
 import dagger.Provides
@@ -96,5 +97,10 @@ class ApiModule(val application: Application) {
     @Singleton
     fun provideUserRepo(): UserRepository {
         return UserRepository()
+    }
+    @Provides
+    @Singleton
+    fun provideCategoriesRepo(): CategoriesRepository{
+        return CategoriesRepository()
     }
 }

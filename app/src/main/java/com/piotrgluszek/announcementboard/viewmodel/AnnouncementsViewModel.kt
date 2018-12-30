@@ -11,4 +11,7 @@ class AnnouncementsViewModel : ViewModel() {
     fun update(id: Long, announcement: Announcement) {
         announcementRepository.update(id, announcement)
     }
+    fun create(announcement: Announcement){
+        announcementRepository.create(announcement)
+    }
 }

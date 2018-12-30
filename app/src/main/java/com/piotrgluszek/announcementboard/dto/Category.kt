@@ -1,3 +1,5 @@
 package com.piotrgluszek.announcementboard.dto
 
-class Category(val id : Long, val name : String)
+import java.io.Serializable
+
+data class Category(val id : Long, val name : String): Serializable

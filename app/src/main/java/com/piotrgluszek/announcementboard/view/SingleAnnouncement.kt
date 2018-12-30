@@ -9,6 +9,7 @@ import com.piotrgluszek.announcementboard.dto.Announcement
 import com.piotrgluszek.announcementboard.image.ImageConverter
 import com.piotrgluszek.announcementboard.injection.ApiComponent
 import com.piotrgluszek.announcementboard.injection.ApiModule
+import com.piotrgluszek.announcementboard.injection.App
 import com.piotrgluszek.announcementboard.injection.DaggerApiComponent
 import kotlinx.android.synthetic.main.activity_single_announcement.*
 import javax.inject.Inject
@@ -21,15 +22,12 @@ class SingleAnnouncement : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_single_announcement)
-        getApiComponent().inject(this)
+        App.component.inject(this)
 
         val serializedAnnouncement = intent.getStringExtra("selectedAnnouncement")
         val announcement = deserializeAnnouncement(serializedAnnouncement)
         setView(announcement)
 
-    }
-    private fun getApiComponent(): ApiComponent {
-        return DaggerApiComponent.builder().apiModule(ApiModule(application)).build();
     }
 
     private fun deserializeAnnouncement(serializedAnnouncement: String): Announcement{

@@ -24,4 +24,10 @@ interface AnnouncementsApi {
     @GET("/users/{id}")
     fun getUserById(@Path("id") id: Long): Call<User>
 
+    @GET("categories")
+    fun getAllCategories(): Call<List<Category>>
+
+    @POST("/announcements")
+    fun createAnnouncement(@Body announcement: Announcement): Call<Announcement>
+
 }

@@ -10,6 +10,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.piotrgluszek.announcementboard.R
 import com.piotrgluszek.announcementboard.dto.Announcement
+import com.piotrgluszek.announcementboard.dto.User
 import com.piotrgluszek.announcementboard.extenstions.formattedDateString
 import com.piotrgluszek.announcementboard.extenstions.toast
 import com.piotrgluszek.announcementboard.image.ImageConverter
@@ -20,14 +21,10 @@ import org.jetbrains.anko.uiThread
 class AnnouncementListAdapter(
     val context: Context,
     val resource: Int,
-    var dataSource: ArrayList<Announcement> = ArrayList()
+    var dataSource: ArrayList<Announcement> = ArrayList(),
+    val user: User?
 ) :
     BaseAdapter() {
-
-    companion object {
-        const val JSON_ANNOUNCEMENT = "jsonSerializedAnnouncement"
-        const val UPDATE_ANNOUNCEMENT = 1
-    }
 
     private val inflater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
@@ -67,13 +64,19 @@ class AnnouncementListAdapter(
             }
         } else photo.setImageResource(R.drawable.image_placeholder)
 
-        edit.setOnClickListener {
-            (context as Board).onListItemEdit(announcement.id!!)
+        if (user?.id == announcement.announcer?.id) {
+            edit.setOnClickListener {
+                (context as Board).onListItemEdit(announcement.id!!)
+            }
+
+            remove.setOnClickListener {
+                context.toast("TODO(Implement removing announcement)")
+            }
+        } else {
+            edit.visibility = View.INVISIBLE
+            remove.visibility = View.INVISIBLE
         }
 
-        remove.setOnClickListener {
-            context.toast("TODO(Implement removing announcement)")
-        }
         return rowView
     }
 }

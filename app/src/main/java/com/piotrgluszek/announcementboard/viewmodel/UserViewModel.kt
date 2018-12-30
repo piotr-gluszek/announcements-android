@@ -11,7 +11,7 @@ import com.piotrgluszek.announcementboard.interfaces.CanReact
 
 class UserViewModel : ViewModel() {
     private val userRepository = App.component.userRepository()
-    private var user = MutableLiveData<User>()
+    var user = MutableLiveData<User>()
 
     init {
         user = userRepository.authenticatedUser

@@ -25,7 +25,8 @@
         </activity>
         <activity android:name=".view.SingleAnnouncement">
         </activity>
-        <activity android:name=".view.EditAnnouncementActivity">
+        <activity android:name=".view.EditAnnouncementActivity"
+        android:windowSoftInputMode="stateHidden|adjustPan">
         </activity>
     </application>
 

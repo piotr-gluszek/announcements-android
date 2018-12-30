@@ -24,4 +24,5 @@
     <string name="invalid_username">Username should be at least 6 characters long. It can consists letters [A-Z] and
         digits [0-9]
     </string>
+    <string name="sample_categories">Computers &amp; Accessories \n</string>
 </resources>

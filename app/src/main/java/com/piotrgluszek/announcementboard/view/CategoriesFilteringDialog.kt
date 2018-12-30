@@ -22,9 +22,9 @@ class CategoriesFilteringDialog : AppCompatDialogFragment(), CanReact {
     private lateinit var alertDialog: AlertDialog
     private lateinit var categories: List<Category>
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = AlertDialog.Builder(context)
+        val builder = AlertDialog.Builder(context!!)
         builder.setTitle("Categories")
-        val serializedCategoriesList = arguments.getByteArray("content")
+        val serializedCategoriesList = arguments!!.getByteArray("content")
         categories = ByteArraySerializer.deserialize(serializedCategoriesList) as List<Category>
         val categoryNames = categories?.map { category -> category.name }?.toMutableList()
         categoryNames?.add(0, "All")

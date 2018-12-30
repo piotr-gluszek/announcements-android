@@ -19,7 +19,7 @@ interface AnnouncementsApi {
     fun updateAnnoncement(@Path("id") id: Long, @Body updatedAnnouncement: Announcement): Call<Announcement>
 
     @DELETE("/announcements/{id}")
-    fun deleteAnnouncement(@Path("id") id: Long)
+    fun deleteAnnouncement(@Path("id") id: Long): Call<Void>
 
     @GET("/users/{id}")
     fun getUserById(@Path("id") id: Long): Call<User>

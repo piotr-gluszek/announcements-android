@@ -21,7 +21,8 @@
         </activity>
         <activity android:name=".view.Registration">
         </activity>
-        <activity android:name=".view.Board">
+        <activity android:name=".view.Board"
+        android:launchMode="singleTop">
         </activity>
         <activity android:name=".view.SingleAnnouncement">
         </activity>

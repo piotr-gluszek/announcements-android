@@ -21,13 +21,13 @@ class AnnouncementRepository {
     }
 
     private val api = App.component.api()
-    private val announcements: MutableLiveData<ArrayList<Announcement>> = MutableLiveData<ArrayList<Announcement>>()
+    private val announcements: MutableLiveData<ArrayList<Announcement>> = MutableLiveData()
 
     fun getAll(): LiveData<ArrayList<Announcement>> {
-        announcements.value?.let {
-            if(it.isNotEmpty())
-                return announcements
-        }
+//        announcements.value?.let {
+//            if(it.isNotEmpty())
+//                return announcements
+//        }
         api.getAllAnnouncements().enqueue(object : Callback<Page<Announcement>> {
             override fun onFailure(call: Call<Page<Announcement>>, t: Throwable) {
                 Log.e(LOG_TAG, String.format(REQ_FAIL, t.message), t)
@@ -82,11 +82,36 @@ class AnnouncementRepository {
 
             override fun onResponse(call: Call<Announcement>, response: Response<Announcement>) {
                 when (response.code()) {
-                    200 -> {
+                    201 -> {
+                        this@AnnouncementRepository.getAll()
                         Log.v(LOG_TAG, "Creation successful")
                     }
                     403 -> {
                         Log.e(LOG_TAG, "Creation failed. User not authorized")
+                    }
+                }
+            }
+        })
+    }
+
+    fun delete(id: Long){
+        api.deleteAnnouncement(id).enqueue(object: Callback<Void> {
+            override fun onFailure(call: Call<Void>, t: Throwable) {
+                Log.e(LOG_TAG, String.format(REQ_FAIL, t.message), t)
+            }
+
+            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                when (response.code()) {
+                    200 -> {
+                        announcements.value?.let{
+                            announcements.value = (announcements.value as ArrayList<Announcement>).filter { a -> a.id != id }.toCollection(ArrayList())
+                            announcements.notifyObservers()
+                            Log.v(LOG_TAG, "Deletion successful")
+                        }
+
+                    }
+                    403 -> {
+                        Log.e(LOG_TAG, "Deletion failed. User not authorized")
                     }
                 }
             }

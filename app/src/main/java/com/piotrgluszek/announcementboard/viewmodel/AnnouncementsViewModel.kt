@@ -14,4 +14,7 @@ class AnnouncementsViewModel : ViewModel() {
     fun create(announcement: Announcement){
         announcementRepository.create(announcement)
     }
+    fun delete(id: Long){
+        announcementRepository.delete(id)
+    }
 }

@@ -3,6 +3,7 @@ package com.piotrgluszek.announcementboard.view
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
+import android.os.AsyncTask
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.piotrgluszek.announcementboard.R
@@ -31,6 +32,7 @@ class Board : AppCompatActivity(), CategoriesFilteringDialog.CategoriesDialogLis
     private lateinit var announcementsViewModel: AnnouncementsViewModel
     private lateinit var categoriesViewModel: CategoriesViewModel
     private lateinit var userViewModel: UserViewModel
+    private lateinit var adapter: AnnouncementListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,7 +40,7 @@ class Board : AppCompatActivity(), CategoriesFilteringDialog.CategoriesDialogLis
 
         App.component.inject(this)
         userViewModel = ViewModelProviders.of(this).get(UserViewModel::class.java)
-        val adapter = AnnouncementListAdapter(this, R.layout.list_view_announcements, user = userViewModel.user.value)
+        adapter = AnnouncementListAdapter(this, R.layout.list_view_announcements, user = userViewModel.user.value)
         announcements_list.adapter = adapter
 
         announcementsViewModel = ViewModelProviders.of(this).get(AnnouncementsViewModel::class.java)
@@ -79,8 +81,8 @@ class Board : AppCompatActivity(), CategoriesFilteringDialog.CategoriesDialogLis
         startActivity(intent)
     }
 
-    fun onListItemRemove() {
-
+    fun onListItemRemove(id: Long) {
+        announcementsViewModel.delete(id)
     }
 
     override fun onCategoriesSelected(selectedCategory: Category?) {

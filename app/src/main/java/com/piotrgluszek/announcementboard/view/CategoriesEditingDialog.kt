@@ -12,12 +12,12 @@ class CategoriesEditingDialog : AppCompatDialogFragment() {
     private lateinit var allCategories: List<Category>
     private lateinit var selectedCategories: MutableList<Category>
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = AlertDialog.Builder(context)
+        val builder = AlertDialog.Builder(context!!)
         builder.setTitle("Categories")
-        val serializedAllCategoriesList = arguments.getByteArray("all_categories")
+        val serializedAllCategoriesList = arguments!!.getByteArray("all_categories")
         allCategories = ByteArraySerializer.deserialize(serializedAllCategoriesList) as List<Category>
 
-        val serializedSelectedCategoriesList = arguments.getByteArray("selected_categories")
+        val serializedSelectedCategoriesList = arguments!!.getByteArray("selected_categories")
         selectedCategories = ByteArraySerializer.deserialize(serializedSelectedCategoriesList) as? MutableList<Category> ?: mutableListOf<Category>()
 
         val categoryNames = allCategories?.map { category -> category.name }.toMutableList()

@@ -1,5 +1,7 @@
 package com.piotrgluszek.announcementboard.dto
 
+import java.io.Serializable
+
 data class Announcement(
     var id: Long? = null,
     var title: String? = null,
@@ -9,4 +11,4 @@ data class Announcement(
     var views: Long? = null,
     var date: Long? = null,
     var photo: String? = null
-)
+): Serializable

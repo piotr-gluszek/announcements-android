@@ -3,6 +3,7 @@ package com.piotrgluszek.announcementboard.viewmodel
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.ViewModel
 import com.piotrgluszek.announcementboard.dto.Announcement
+import com.piotrgluszek.announcementboard.dto.SortingAndFilteringPreferences
 import com.piotrgluszek.announcementboard.injection.App
 
 class AnnouncementsViewModel : ViewModel() {
@@ -16,5 +17,11 @@ class AnnouncementsViewModel : ViewModel() {
     }
     fun delete(id: Long){
         announcementRepository.delete(id)
+    }
+    fun incrementViews(id: Long){
+        announcementRepository.incrementViews(id)
+    }
+    fun getAll(sortingAndFilteringPreferences: SortingAndFilteringPreferences){
+        announcementRepository.getAll(sortingAndFilteringPreferences)
     }
 }

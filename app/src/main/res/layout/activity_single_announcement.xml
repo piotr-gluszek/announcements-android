@@ -6,90 +6,99 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".view.SingleAnnouncement">
-
-    <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="368dp"
-            android:layout_height="551dp" tools:layout_editor_absoluteY="8dp" tools:layout_editor_absoluteX="8dp">
-        <Space
-                android:layout_width="match_parent"
-                android:layout_height="10px"/>
-        <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="154dp" tools:srcCompat="@drawable/image_placeholder"
-                android:id="@+id/photo" app:srcCompat="@drawable/image_placeholder" android:scaleType="fitCenter"
-        />
-        <Space
-                android:layout_width="match_parent"
-                android:layout_height="10px"/>
-        <TextView
-                android:text="TextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:id="@+id/title"
-                tools:text="TITLE TO LONG TO DISPLAY IN ONE LINE"
-                android:textAlignment="center"
-                android:textSize="36sp" android:textAllCaps="false"/>
-        <Space
-                android:layout_width="match_parent"
-                android:layout_height="20px"/>
-        <TextView
-                android:text="TextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:id="@+id/description"
-                tools:text="This is a very cool description of an item being anounced right here by user."
-                android:paddingLeft="30dp" android:paddingRight="30dp"/>
-        <Space
-                android:layout_width="match_parent"
-                android:layout_height="20px"/>
+    <ScrollView android:layout_width="match_parent" android:layout_height="match_parent">
         <LinearLayout
-                android:orientation="horizontal"
+                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="107dp">
+                android:layout_height="wrap_content"
+                tools:layout_editor_absoluteY="8dp"
+                tools:layout_editor_absoluteX="8dp">
+            <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="10px"/>
             <ImageView
-                    android:layout_width="244dp"
-                    android:layout_height="wrap_content" tools:srcCompat="@tools:sample/avatars[11]"
-                    android:id="@+id/contactPhoto" android:layout_weight="1"
-                    app:srcCompat="@drawable/user_photo_placeholder"/>
+                    android:layout_width="match_parent"
+                    android:layout_height="154dp" tools:srcCompat="@drawable/image_placeholder"
+                    android:id="@+id/photo" app:srcCompat="@drawable/image_placeholder" android:scaleType="fitCenter"
+            />
+            <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="10px"/>
+            <TextView
+                    android:text="TextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:id="@+id/title"
+                    tools:text="TITLE TO LONG TO DISPLAY IN ONE LINE"
+                    android:textAlignment="center"
+                    android:textSize="36sp" android:textAllCaps="false" android:paddingLeft="15dp"
+                    android:paddingRight="15dp"/>
+            <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="20px"/>
+            <TextView
+                    android:text="TextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:id="@+id/description"
+                    tools:text="This is a very cool description of an item being anounced right here by user."
+                    android:paddingLeft="10dp" android:paddingRight="10dp" android:textSize="18sp"/>
+            <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="20px" android:visibility="visible"/>
             <LinearLayout
-                    android:orientation="vertical"
+                    android:orientation="horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" android:layout_weight="1">
-                <TextView
-                        android:text="TextView"
+                    android:layout_height="107dp">
+                <ImageView
+                        android:layout_width="244dp"
+                        android:layout_height="wrap_content" tools:srcCompat="@tools:sample/avatars[11]"
+                        android:id="@+id/contactPhoto" android:layout_weight="1"
+                        app:srcCompat="@drawable/user_photo_placeholder"/>
+                <LinearLayout
+                        android:orientation="vertical"
                         android:layout_width="match_parent"
-                        android:layout_height="32dp" android:id="@+id/name" android:layout_weight="0.5"
-                        tools:text="Anon"/>
-                <TextView
-                        android:text="TextView"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" android:id="@+id/phone" android:layout_weight="0.75"
-                        tools:text="777 777 777"/>
-                <TextView
-                        android:text="TextView"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" android:id="@+id/mail" android:layout_weight="0.75"
-                        tools:text="email@mail.ru"/>
+                        android:layout_height="match_parent" android:layout_weight="1">
+                    <TextView
+                            android:text="TextView"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp" android:id="@+id/name" android:layout_weight="0.33"
+                            tools:text="Anon" app:autoSizeTextType="uniform"/>
+                    <TextView
+                            android:text="TextView"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp" android:id="@+id/phone" android:layout_weight="0.33"
+                            tools:text="777 777 777" app:autoSizeTextType="uniform"/>
+                    <TextView
+                            android:text="TextView"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp" android:id="@+id/mail" android:layout_weight="0.33"
+                            tools:text="email@mail.ru" app:autoSizeTextType="uniform"/>
+                </LinearLayout>
             </LinearLayout>
-        </LinearLayout>
-        <Space
-                android:layout_width="match_parent"
-                android:layout_height="20px"/>
-        <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="35dp">
-            <TextView
+            <Space
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/date"
-                    android:layout_weight="0.5"
-                    tools:text="Posted: 01-01-2001"/>
-            <TextView
+                    android:layout_height="20px"/>
+            <LinearLayout
+                    android:orientation="horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/views"
-                    tools:text="Views: 3"
-                    android:layout_weight="0.5"/>
+                    android:layout_height="35dp">
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/date"
+                        android:layout_weight="0.5"
+                        tools:text="Posted: 01-01-2001" android:paddingLeft="8dp" android:paddingRight="8dp"/>
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/views"
+                        tools:text="Views: 3"
+                        android:layout_weight="0.5" android:textAlignment="textEnd"/>
+            </LinearLayout>
+            <TextView
+                    android:text="TextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:id="@+id/categories" tools:text="#Jobs \n#Other"
+                    android:paddingLeft="8dp"/>
         </LinearLayout>
-    </LinearLayout>
+    </ScrollView>
 </android.support.constraint.ConstraintLayout>

@@ -9,8 +9,14 @@ interface AnnouncementsApi {
     @POST("/login")
     fun login(@Body credentials: Credentials): Call<ApiMessage>
 
+    @GET("/announcements/from-category/{id}")
+    fun getAllAnnouncements(
+        @Path("id") categoryId: Long,
+        @Query("sort") vararg sort: String
+    ): Call<Page<Announcement>>
+
     @GET("/announcements")
-    fun getAllAnnouncements(): Call<Page<Announcement>>
+    fun getAllAnnouncements(@Query("sort") vararg sort: String): Call<Page<Announcement>>
 
     @POST("/register")
     fun register(@Body registrationData: RegistrationData): Call<Any>
@@ -29,5 +35,8 @@ interface AnnouncementsApi {
 
     @POST("/announcements")
     fun createAnnouncement(@Body announcement: Announcement): Call<Announcement>
+
+    @PUT("announcements/{id}/increment-views")
+    fun incrementViews(@Path("id") id: Long): Call<Void>
 
 }

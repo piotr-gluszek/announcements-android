@@ -3,13 +3,15 @@ package com.piotrgluszek.announcementboard.view
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
-import android.os.AsyncTask
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.view.View
+import android.widget.AdapterView
 import com.piotrgluszek.announcementboard.R
 import com.piotrgluszek.announcementboard.adapters.AnnouncementListAdapter
 import com.piotrgluszek.announcementboard.dto.Announcement
 import com.piotrgluszek.announcementboard.dto.Category
+import com.piotrgluszek.announcementboard.dto.SortingAndFilteringPreferences
 import com.piotrgluszek.announcementboard.injection.App
 import com.piotrgluszek.announcementboard.utility.serialization.ByteArraySerializer
 import com.piotrgluszek.announcementboard.viewmodel.AnnouncementsViewModel
@@ -33,6 +35,7 @@ class Board : AppCompatActivity(), CategoriesFilteringDialog.CategoriesDialogLis
     private lateinit var categoriesViewModel: CategoriesViewModel
     private lateinit var userViewModel: UserViewModel
     private lateinit var adapter: AnnouncementListAdapter
+    private val sortingAndFilteringPreferences = SortingAndFilteringPreferences()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,9 +56,9 @@ class Board : AppCompatActivity(), CategoriesFilteringDialog.CategoriesDialogLis
         )
 
         categoriesViewModel = ViewModelProviders.of(this).get(CategoriesViewModel::class.java)
-        categoriesViewModel.selectedCategory.observe(this, Observer<Category>{
+        categoriesViewModel.selectedCategory.observe(this, Observer<Category> {
             categories.text = it?.name ?: "ALL"
-        } )
+        })
 
         categories.setOnClickListener {
             val categories = categoriesViewModel.categories.value ?: mutableListOf()
@@ -63,14 +66,52 @@ class Board : AppCompatActivity(), CategoriesFilteringDialog.CategoriesDialogLis
             val serializedCategories = ByteArraySerializer.serialize(categories)
             bundle.putByteArray("content", serializedCategories)
             val dialog = CategoriesFilteringDialog()
-                dialog.arguments = bundle
-                dialog.show(supportFragmentManager, CATEGORIES_DIALOG)
+            dialog.arguments = bundle
+            dialog.show(supportFragmentManager, CATEGORIES_DIALOG)
         }
 
         addNew.setOnClickListener {
             val intent = Intent(this, EditAnnouncementActivity::class.java)
             intent.putExtra(ACTION, ACTION_CREATE)
             startActivity(intent)
+        }
+        announcements_list.setOnItemClickListener { _, _, position, _ ->
+            val intent = Intent(this@Board, SingleAnnouncement::class.java)
+            intent.putExtra("id", position)
+            startActivity(intent)
+        }
+
+        views_sort.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, position: Int, p3: Long) {
+                val sortingDirectionItem = views_sort.selectedItem as String
+                var direction: String? = null
+                when (sortingDirectionItem) {
+                    ("ascending") -> direction = "asc"
+                    ("descending") -> direction = "desc"
+                }
+                sortingAndFilteringPreferences.sortingOptions["views"] = direction
+            }
+
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+            }
+        }
+        date_sort.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, position: Int, p3: Long) {
+                val sortingDirectionItem = views_sort.selectedItem as String
+                var direction: String? = null
+                when (sortingDirectionItem) {
+                    ("ascending") -> direction = "asc"
+                    ("descending") -> direction = "desc"
+                }
+                sortingAndFilteringPreferences.sortingOptions["date"] = direction
+            }
+
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+            }
+        }
+
+        sync.setOnClickListener{
+            announcementsViewModel.getAll(sortingAndFilteringPreferences)
         }
     }
 
@@ -87,9 +128,9 @@ class Board : AppCompatActivity(), CategoriesFilteringDialog.CategoriesDialogLis
 
     override fun onCategoriesSelected(selectedCategory: Category?) {
         categories.text = "All"
-        selectedCategory?.let{
+        sortingAndFilteringPreferences.category = selectedCategory
+        selectedCategory?.let {
             categoriesViewModel.selectedCategory.value = selectedCategory
-//            categories.text = it.name
         }
     }
 }

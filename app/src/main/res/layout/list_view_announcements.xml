@@ -1,41 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                             xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             xmlns:tools="http://schemas.android.com/tools"
+                                             android:layout_width="match_parent"
                                              android:layout_height="match_parent">
 
     <LinearLayout
             android:descendantFocusability="blocksDescendants"
             android:orientation="horizontal"
             android:layout_width="368dp"
-            android:layout_height="136dp" tools:layout_editor_absoluteY="8dp" tools:layout_editor_absoluteX="8dp">
+            android:layout_height="136dp" tools:layout_editor_absoluteY="8dp"
+            tools:layout_editor_absoluteX="8dp">
         <ImageView
                 android:layout_width="278dp"
-                android:layout_height="wrap_content" tools:srcCompat="@tools:sample/avatars[3]"
-                android:id="@+id/photo" android:layout_weight="1" android:adjustViewBounds="true"/>
+                android:layout_height="wrap_content"
+                tools:srcCompat="@tools:sample/avatars[3]"
+                android:id="@+id/photo" android:layout_weight="1"
+                android:adjustViewBounds="true"/>
         <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" android:layout_weight="1">
             <TextView
-                    android:text="TextView"
                     android:layout_width="match_parent"
-                    android:layout_height="78dp" android:id="@+id/title" android:textAlignment="center"/>
+                    android:layout_height="78dp" android:id="@+id/title"
+                    android:textAlignment="center"
+                    android:gravity="center"
+                    tools:text="Sprzedam opla"
+                    app:autoSizeTextType="uniform"
+                    android:padding="8dp"/>
             <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
-                <TextView
-                        android:text="TextView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent" android:id="@+id/date" android:layout_weight="1"/>
+                <LinearLayout
+                        android:layout_width="84dp"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+                    <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:id="@+id/date"
+                            android:gravity="center"
+                            tools:text="12-12-2012"
+                            android:layout_weight="0.5"/>
+                    <LinearLayout android:layout_width="match_parent"
+                                  android:orientation="horizontal"
+                                  android:layout_weight="0.5" android:layout_height="0dp">
+                        <ImageView
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="0.5"
+                                app:srcCompat="@drawable/ic_seen_times"
+                                android:scaleType="center"/>
+                        <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:id="@+id/views"
+                                android:layout_weight="0.5"
+                                android:gravity="center"
+                                tools:text="5"/>
+                    </LinearLayout>
+                </LinearLayout>
                 <ImageButton
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent" app:srcCompat="@android:drawable/ic_menu_edit"
-                        android:id="@+id/edit_btn" android:layout_weight="1"/>
+                        android:id="@+id/edit_btn" android:layout_weight="0.5"/>
                 <ImageButton
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent" app:srcCompat="@android:drawable/ic_menu_delete"
-                        android:id="@+id/remove_btn" android:layout_weight="1"/>
+                        android:id="@+id/remove_btn" android:layout_weight="0.5"/>
 
             </LinearLayout>
         </LinearLayout>

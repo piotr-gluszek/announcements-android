@@ -31,7 +31,8 @@ class AnnouncementListAdapter(
         val title: TextView,
         val date: TextView,
         val edit: ImageButton,
-        val remove: ImageButton
+        val remove: ImageButton,
+        val views: TextView
     )
 
     private val inflater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
@@ -62,13 +63,15 @@ class AnnouncementListAdapter(
             val date = rowView.findViewById(R.id.date) as TextView
             val edit = rowView.findViewById(R.id.edit_btn) as ImageButton
             val remove = rowView.findViewById(R.id.remove_btn) as ImageButton
-            val holder = ViewHolder(photo, title, date, edit, remove)
+            val views = rowView.findViewById(R.id.views) as TextView
+            val holder = ViewHolder(photo, title, date, edit, remove, views)
             rowView.tag = holder
         }
 
         val announcement = getItem(position) as Announcement
         val viewHolder = rowView.tag as ViewHolder
         viewHolder.title.text = announcement.title
+        viewHolder.views.text = announcement.views.toString()
         viewHolder.date.text = announcement.date?.formattedDateString(context.resources.getString(R.string.dateFormat))
         if (announcement.photo != null) {
             val imgByteArray = Base64.decode(announcement.photo, Base64.DEFAULT)

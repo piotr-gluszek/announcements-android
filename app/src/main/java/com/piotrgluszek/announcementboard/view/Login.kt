@@ -46,11 +46,16 @@ class Login : AppCompatActivity(), CanReact {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        App.component.inject(this)
+        if(tokenStorage.sharedPreferences.contains("jwt")){
+            val token = tokenStorage.sharedPreferences.getString("jwt", null)
+            autoLogin(token)
+        }
         setContentView(R.layout.activity_login)
         val binding: ActivityLoginBinding = DataBindingUtil.setContentView(this, R.layout.activity_login)
         val validator = Validator(binding)
         validator.enableFormValidationMode()
-        App.component?.inject(this)
+
         register_link.setOnClickListener {
             val intent = Intent(this, Registration::class.java)
             startActivity(intent)
@@ -93,5 +98,12 @@ class Login : AppCompatActivity(), CanReact {
             is NoSuchElementException -> toast("Failed to fetch user data")
             else -> toast("Connection problem")
         }
+    }
+
+    private fun autoLogin(token: String){
+        tokenStorage.store(token)
+        val userId = tokenStorage.readUserId(token)
+        Log.v(LOG_TAG, "User ID obtained from token: $token is: $userId ")
+        userViewModel.get(userId, this@Login)
     }
 }

@@ -8,7 +8,7 @@ import com.piotrgluszek.announcementboard.injection.App
 
 class AnnouncementsViewModel : ViewModel() {
     private val announcementRepository = App.component.announcementRepository()
-    val announcements: LiveData<ArrayList<Announcement>> by lazy { announcementRepository.getAll() }
+    val announcements: LiveData<ArrayList<Announcement>> = announcementRepository.announcements
     fun update(id: Long, announcement: Announcement) {
         announcementRepository.update(id, announcement)
     }
@@ -21,7 +21,8 @@ class AnnouncementsViewModel : ViewModel() {
     fun incrementViews(id: Long){
         announcementRepository.incrementViews(id)
     }
-    fun getAll(sortingAndFilteringPreferences: SortingAndFilteringPreferences){
+    fun getAll(sortingAndFilteringPreferences: SortingAndFilteringPreferences) :LiveData<ArrayList<Announcement>>{
         announcementRepository.getAll(sortingAndFilteringPreferences)
+        return announcements
     }
 }

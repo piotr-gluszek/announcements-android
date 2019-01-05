@@ -3,12 +3,14 @@ package com.piotrgluszek.announcementboard.view
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.databinding.DataBindingUtil
+import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
-import android.provider.MediaStore
 import android.support.v7.app.AppCompatActivity
 import android.widget.EditText
 import br.com.ilhasoft.support.validation.Validator
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.piotrgluszek.announcementboard.R
 import com.piotrgluszek.announcementboard.databinding.ActivityEditAnnouncementBinding
 import com.piotrgluszek.announcementboard.dto.Announcement
@@ -25,6 +27,7 @@ import kotlinx.android.synthetic.main.activity_edit_announcement.*
 class EditAnnouncementActivity : AppCompatActivity(), CategoriesEditingDialog.CategoriesEditingDialogListener {
     companion object {
         const val PICK_PHOTO = 1
+        const val IS_DEFAULT_PHOTO = 0
     }
 
     lateinit var announcementViewModel: AnnouncementsViewModel
@@ -61,6 +64,7 @@ class EditAnnouncementActivity : AppCompatActivity(), CategoriesEditingDialog.Ca
         userViewModel = ViewModelProviders.of(this).get(UserViewModel::class.java)
         categoriesViewModel = ViewModelProviders.of(this).get(CategoriesViewModel::class.java)
 
+        photo.setTag(R.id.IS_DEFAULT_PHOTO, true)
         photo.setOnClickListener {
             val pickPhoto = Intent(
                 Intent.ACTION_PICK,
@@ -116,16 +120,29 @@ class EditAnnouncementActivity : AppCompatActivity(), CategoriesEditingDialog.Ca
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == PICK_PHOTO && resultCode == RESULT_OK) {
             val imageUri = data?.data
-            val bitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, imageUri)
-            photo.setImageBitmap(bitmap)
+            //val bitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, imageUri)
+            var bmp: Bitmap? = null;
+            Glide
+                .with(this)
+                .asBitmap()
+                .load(imageUri)
+                .apply(RequestOptions().fitCenter())
+                .into(photo)
+            // is photo default?
+            photo.setTag(R.id.IS_DEFAULT_PHOTO, false)
+            //photo.setImageBitmap(bitmap)
+
         }
     }
 
     private fun getViewData() {
-        val bitmap = (photo.drawable as? BitmapDrawable)?.bitmap
         var newPhoto: String? = null
-        if (bitmap != null)
-            newPhoto = ImageConverter.toBase64(bitmap)
+        if (!(photo.getTag(R.id.IS_DEFAULT_PHOTO) as Boolean)) {
+            val bitmap = (photo.drawable as? BitmapDrawable)?.bitmap
+            if (bitmap != null)
+                newPhoto = ImageConverter.toBase64(bitmap)
+        }
+
         val title = findViewById<EditText>(R.id.title)
         val newTitle = title.text.toString()
         val newDescription = description.text.toString()
@@ -143,7 +160,7 @@ class EditAnnouncementActivity : AppCompatActivity(), CategoriesEditingDialog.Ca
         unsavedModifiedAnnouncement.categories = categories
     }
 
-    private fun setCategoriesToTextView(categories: MutableList<Category>?){
+    private fun setCategoriesToTextView(categories: MutableList<Category>?) {
         var categoriesAsText = ""
         categories?.let {
             for (category in it) {

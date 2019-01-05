@@ -6,6 +6,22 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".view.Board">
+    <android.support.design.widget.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true" app:srcCompat="@drawable/ic_navigate_next"
+            android:id="@+id/next_page"
+            android:layout_marginBottom="50dp" app:layout_constraintBottom_toBottomOf="parent"
+            app:backgroundTint="@color/colorPrimary" android:layout_marginEnd="16dp"
+            app:layout_constraintEnd_toEndOf="parent"/>
+    <android.support.design.widget.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true" app:srcCompat="@drawable/ic_navigate_before"
+            android:id="@+id/prev_page"
+            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="16dp"
+            android:layout_marginBottom="50dp" app:layout_constraintBottom_toBottomOf="parent"
+            app:backgroundTint="@color/colorPrimary" android:visibility="gone"/>
     <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="138dp"
@@ -32,12 +48,14 @@
                             android:text="views"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content" android:id="@+id/textView6"
-                            android:layout_weight="0.5" tools:text="views" android:textAlignment="center"/>
+                            android:layout_weight="0.5" tools:text="views" android:textAlignment="center"
+                            android:gravity="center"/>
                     <TextView
                             android:text="date"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content" android:id="@+id/textView7"
-                            android:layout_weight="0.5" tools:text="date" android:textAlignment="center"/>
+                            android:layout_weight="0.5" tools:text="date" android:textAlignment="center"
+                            android:gravity="center"/>
                 </LinearLayout>
                 <LinearLayout
                         android:orientation="vertical"
@@ -59,9 +77,18 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
                     <ImageButton
+                            android:background="@null"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content" app:srcCompat="@drawable/ic_sync"
-                            android:id="@+id/sync"/>
+                            android:layout_height="0dp" app:srcCompat="@drawable/ic_sync"
+                            android:id="@+id/sync" android:layout_weight="0.5"/>
+                    <ImageButton
+                            android:background="@null"
+                            android:text="new"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:id="@+id/addNew"
+                            android:layout_weight="0.5"
+                            tools:text="new" android:src="@drawable/ic_add_circle"/>
                 </LinearLayout>
             </LinearLayout>
             <LinearLayout
@@ -72,12 +99,9 @@
                         android:text="All"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" android:id="@+id/categories" android:layout_weight="1"
-                        tools:text="All"/>
-                <Button
-                        android:text="new"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" android:id="@+id/addNew" android:layout_weight="1"
-                        tools:text="new"/>
+                        tools:text="Category: All"
+                        android:singleLine="true"/>
+
             </LinearLayout>
         </LinearLayout>
         <LinearLayout
@@ -100,7 +124,7 @@
                 <ImageButton
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent" app:srcCompat="@android:drawable/ic_lock_power_off"
-                        android:id="@+id/imageButton" android:layout_weight="0.5"/>
+                        android:id="@+id/log_out" android:layout_weight="0.5"/>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

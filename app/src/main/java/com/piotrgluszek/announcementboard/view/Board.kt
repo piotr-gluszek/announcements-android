@@ -18,6 +18,11 @@ import com.piotrgluszek.announcementboard.viewmodel.AnnouncementsViewModel
 import com.piotrgluszek.announcementboard.viewmodel.CategoriesViewModel
 import com.piotrgluszek.announcementboard.viewmodel.UserViewModel
 import kotlinx.android.synthetic.main.activity_board.*
+import android.view.animation.Animation
+import android.view.animation.LinearInterpolator
+import android.view.animation.RotateAnimation
+import com.piotrgluszek.announcementboard.auth.TokenStorage
+import javax.inject.Inject
 
 
 class Board : AppCompatActivity(), CategoriesFilteringDialog.CategoriesDialogListener {
@@ -31,6 +36,8 @@ class Board : AppCompatActivity(), CategoriesFilteringDialog.CategoriesDialogLis
         const val CATEGORIES_DIALOG = "CATEGORIES_DIALOG"
     }
 
+    @Inject
+    lateinit var tokenStorage: TokenStorage
     private lateinit var announcementsViewModel: AnnouncementsViewModel
     private lateinit var categoriesViewModel: CategoriesViewModel
     private lateinit var userViewModel: UserViewModel
@@ -47,10 +54,11 @@ class Board : AppCompatActivity(), CategoriesFilteringDialog.CategoriesDialogLis
         announcements_list.adapter = adapter
 
         announcementsViewModel = ViewModelProviders.of(this).get(AnnouncementsViewModel::class.java)
-        announcementsViewModel.announcements.observe(
+        announcementsViewModel.getAll(sortingAndFilteringPreferences).observe(
             this, Observer<ArrayList<Announcement>> {
                 it?.let {
                     adapter.setAnnouncements(it)
+                    sync.animation.cancel()
                 }
             }
         )
@@ -95,9 +103,10 @@ class Board : AppCompatActivity(), CategoriesFilteringDialog.CategoriesDialogLis
             override fun onNothingSelected(p0: AdapterView<*>?) {
             }
         }
+
         date_sort.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, position: Int, p3: Long) {
-                val sortingDirectionItem = views_sort.selectedItem as String
+                val sortingDirectionItem = date_sort.selectedItem as String
                 var direction: String? = null
                 when (sortingDirectionItem) {
                     ("ascending") -> direction = "asc"
@@ -110,8 +119,54 @@ class Board : AppCompatActivity(), CategoriesFilteringDialog.CategoriesDialogLis
             }
         }
 
-        sync.setOnClickListener{
+
+
+        sortingAndFilteringPreferences.isFirst.observe(this, Observer<Boolean> {
+            it?.let{
+                if(it) prev_page.visibility = View.GONE
+                else prev_page.visibility = View.VISIBLE
+            }
+        })
+        sortingAndFilteringPreferences.isLast.observe(this, Observer<Boolean> {
+            it?.let{
+                if(it) next_page.visibility = View.GONE
+                else next_page.visibility = View.VISIBLE
+            }
+        })
+
+        next_page.setOnClickListener{
+            sync.animation.start()
+            sortingAndFilteringPreferences.number += 1
             announcementsViewModel.getAll(sortingAndFilteringPreferences)
+            announcements_list.smoothScrollToPosition(0)
+        }
+        prev_page.setOnClickListener{
+            sync.animation.start()
+            sortingAndFilteringPreferences.number -= 1
+            announcementsViewModel.getAll(sortingAndFilteringPreferences)
+            announcements_list.smoothScrollToPosition(0)
+        }
+
+
+        val rotate = RotateAnimation(
+            360f, 0f,
+            Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
+            0.5f
+        )
+        rotate.duration = 4000
+        rotate.repeatCount = Animation.INFINITE
+        rotate.interpolator = LinearInterpolator()
+        sync.animation = rotate
+
+        sync.setOnClickListener{
+            it.animation.start()
+            announcementsViewModel.getAll(sortingAndFilteringPreferences)
+        }
+
+        log_out.setOnClickListener{
+            tokenStorage.remove()
+            val intent = Intent(this, Login::class.java)
+            startActivity(intent)
         }
     }
 
@@ -129,8 +184,15 @@ class Board : AppCompatActivity(), CategoriesFilteringDialog.CategoriesDialogLis
     override fun onCategoriesSelected(selectedCategory: Category?) {
         categories.text = "All"
         sortingAndFilteringPreferences.category = selectedCategory
+
         selectedCategory?.let {
             categoriesViewModel.selectedCategory.value = selectedCategory
+            // When category filter apply result set may shrink thus, results must be presented from the 1st page (0 based indexing)
+            sortingAndFilteringPreferences.number = 0
         }
+    }
+
+    override fun onBackPressed() {
+        //DO NOTHING
     }
 }

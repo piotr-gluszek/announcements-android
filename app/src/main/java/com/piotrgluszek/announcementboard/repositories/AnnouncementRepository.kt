@@ -17,22 +17,30 @@ class AnnouncementRepository {
     companion object {
         const val REQ_FAIL = "Request failed: %s"
         const val LOG_TAG = "AnnouncementRepository"
+        const val DEFAULT_PAGE_SIZE = 5
+        const val DEFAULT_STARTING_PAGE = 0L
     }
 
     private val api = App.component.api()
-    private val announcements: MutableLiveData<ArrayList<Announcement>> = MutableLiveData()
+    val announcements: MutableLiveData<ArrayList<Announcement>> = MutableLiveData()
 
     fun getAll(sortingAndFilteringPreferences: SortingAndFilteringPreferences? = null): LiveData<ArrayList<Announcement>> {
-//        announcements.value?.let {
-//            if(it.isNotEmpty())
-//                return announcements
-//        }
-        var call =api.getAllAnnouncements()
-        sortingAndFilteringPreferences?.let{
 
-           it.category?.let {
-               call = api.getAllAnnouncements(it.id, *(sortingAndFilteringPreferences.getSortingOptionsVarargs().toTypedArray()))
-           }
+        var call: Call<Page<Announcement>> = api.getAllAnnouncements(DEFAULT_PAGE_SIZE, DEFAULT_STARTING_PAGE)
+
+        sortingAndFilteringPreferences?.let {
+            val pageNumber = sortingAndFilteringPreferences.number
+            val pageSize = sortingAndFilteringPreferences.size
+            call = api.getAllAnnouncements(
+                pageSize,
+                pageNumber,
+                *(sortingAndFilteringPreferences.getSortingOptionsVarargs().toTypedArray()))
+            it.category?.let {
+                call = api.getAllAnnouncements(
+                    it.id, pageSize, pageNumber,
+                    *(sortingAndFilteringPreferences.getSortingOptionsVarargs().toTypedArray())
+                )
+            }
         }
 
         call.enqueue(object : Callback<Page<Announcement>> {
@@ -43,7 +51,13 @@ class AnnouncementRepository {
             override fun onResponse(call: Call<Page<Announcement>>, response: Response<Page<Announcement>>) {
                 when (response.code()) {
                     200 -> {
-                        announcements.setValue(response.body()?.content)
+                        val page = response.body()
+                        sortingAndFilteringPreferences?.let{
+                            it.number = page?.number ?: 0
+                            it.isLast.value = page?.last ?: true
+                            it.isFirst.value = page?.first ?: true
+                        }
+                        announcements.setValue(page?.content)
                     }
                 }
             }

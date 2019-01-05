@@ -5,6 +5,7 @@ import android.util.Base64
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import android.widget.BaseAdapter
 import android.widget.ImageButton
 import android.widget.ImageView
@@ -14,7 +15,6 @@ import com.piotrgluszek.announcementboard.R
 import com.piotrgluszek.announcementboard.dto.Announcement
 import com.piotrgluszek.announcementboard.dto.User
 import com.piotrgluszek.announcementboard.extenstions.formattedDateString
-import com.piotrgluszek.announcementboard.image.ImageConverter
 import com.piotrgluszek.announcementboard.view.Board
 
 
@@ -100,6 +100,8 @@ class AnnouncementListAdapter(
             viewHolder.edit.visibility = View.INVISIBLE
             viewHolder.remove.visibility = View.INVISIBLE
         }
+        val animation =AnimationUtils.loadAnimation(context, R.anim.slide_from_bottom)
+        rowView?.startAnimation(animation)
         return rowView
     }
 

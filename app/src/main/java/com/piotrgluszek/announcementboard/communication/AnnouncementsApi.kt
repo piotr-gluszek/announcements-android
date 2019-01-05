@@ -12,11 +12,16 @@ interface AnnouncementsApi {
     @GET("/announcements/from-category/{id}")
     fun getAllAnnouncements(
         @Path("id") categoryId: Long,
+        @Query("size") pageSize: Int,
+        @Query("page") pageNumber: Long,
         @Query("sort") vararg sort: String
     ): Call<Page<Announcement>>
 
     @GET("/announcements")
-    fun getAllAnnouncements(@Query("sort") vararg sort: String): Call<Page<Announcement>>
+    fun getAllAnnouncements(
+        @Query("size") pageSize: Int,
+        @Query("page") pageNumber: Long,
+        @Query("sort") vararg sort: String): Call<Page<Announcement>>
 
     @POST("/register")
     fun register(@Body registrationData: RegistrationData): Call<Any>

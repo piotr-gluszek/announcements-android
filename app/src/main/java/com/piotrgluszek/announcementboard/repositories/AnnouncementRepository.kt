@@ -36,7 +36,7 @@ class AnnouncementRepository {
                 pageNumber,
                 *(sortingAndFilteringPreferences.getSortingOptionsVarargs().toTypedArray()))
             it.category?.let {
-                call = api.getAllAnnouncements(
+                call = api.getAllAnnouncementsFromCategory(
                     it.id, pageSize, pageNumber,
                     *(sortingAndFilteringPreferences.getSortingOptionsVarargs().toTypedArray())
                 )
@@ -67,7 +67,7 @@ class AnnouncementRepository {
 
     fun update(id: Long, updatedAnnouncement: Announcement) {
 
-        api.updateAnnoncement(id, updatedAnnouncement).enqueue(object : Callback<Announcement> {
+        api.updateAnnouncement(id, updatedAnnouncement).enqueue(object : Callback<Announcement> {
             override fun onFailure(call: Call<Announcement>, t: Throwable) {
                 Log.e(LOG_TAG, String.format(REQ_FAIL, t.message), t)
             }

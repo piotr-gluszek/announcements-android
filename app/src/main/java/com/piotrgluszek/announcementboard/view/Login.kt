@@ -64,6 +64,10 @@ class Login : AppCompatActivity(), CanReact {
             if (validator.validate())
                 attemptLogin(username.text.toString(), password.text.toString())
         }
+        continue_without_login.setOnClickListener {
+            val intent = Intent(this@Login, Board::class.java)
+            startActivity(intent)
+        }
     }
 
     override fun onResume() {

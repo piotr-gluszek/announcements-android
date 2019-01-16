@@ -3,6 +3,7 @@ package com.piotrgluszek.announcementboard.view
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
+import android.opengl.Visibility
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
@@ -168,6 +169,8 @@ class Board : AppCompatActivity(), CategoriesFilteringDialog.CategoriesDialogLis
             val intent = Intent(this, Login::class.java)
             startActivity(intent)
         }
+        if(userViewModel.user.value == null)
+            logged_in_user_pane.visibility = View.GONE
     }
 
     fun onListItemEdit(id: Long) {
@@ -193,6 +196,8 @@ class Board : AppCompatActivity(), CategoriesFilteringDialog.CategoriesDialogLis
     }
 
     override fun onBackPressed() {
-        //DO NOTHING
+        if(userViewModel.user.value == null){
+            super.onBackPressed()
+        }
     }
 }

@@ -24,5 +24,4 @@ interface ApiComponent {
     fun announcementRepository(): AnnouncementRepository
     fun userRepository(): UserRepository
     fun categoriesRepository(): CategoriesRepository
-
 }

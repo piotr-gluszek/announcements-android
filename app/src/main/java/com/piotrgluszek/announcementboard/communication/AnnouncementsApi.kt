@@ -10,7 +10,7 @@ interface AnnouncementsApi {
     fun login(@Body credentials: Credentials): Call<ApiMessage>
 
     @GET("/announcements/from-category/{id}")
-    fun getAllAnnouncements(
+    fun getAllAnnouncementsFromCategory(
         @Path("id") categoryId: Long,
         @Query("size") pageSize: Int,
         @Query("page") pageNumber: Long,
@@ -27,7 +27,7 @@ interface AnnouncementsApi {
     fun register(@Body registrationData: RegistrationData): Call<Any>
 
     @PUT("/announcements/{id}")
-    fun updateAnnoncement(@Path("id") id: Long, @Body updatedAnnouncement: Announcement): Call<Announcement>
+    fun updateAnnouncement(@Path("id") id: Long, @Body updatedAnnouncement: Announcement): Call<Announcement>
 
     @DELETE("/announcements/{id}")
     fun deleteAnnouncement(@Path("id") id: Long): Call<Void>

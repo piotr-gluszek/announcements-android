@@ -3,6 +3,7 @@ package com.piotrgluszek.announcementboard.injection
 import android.app.Application
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
+import android.util.Log
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -22,6 +23,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Converter
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.*
 import javax.inject.Singleton
 
 @Module
@@ -63,9 +65,12 @@ class ApiModule(val application: Application) {
     @Singleton
     fun provideRetrofit(gson: Gson, okHttpClient: OkHttpClient): Retrofit {
 
+        val input = application.assets.open("server.properties")
+        val properties = Properties().apply { load(input) }
+
         return Retrofit.Builder()
             .addConverterFactory(GsonConverterFactory.create(gson))
-            .baseUrl("http://192.168.1.246:8181")
+            .baseUrl(properties.getProperty("ip").also { Log.v("SERVER_IP", it) })
             .client(okHttpClient)
             .build()
     }
@@ -93,14 +98,16 @@ class ApiModule(val application: Application) {
     fun provideAnnouncementsRepo(): AnnouncementRepository {
         return AnnouncementRepository()
     }
+
     @Provides
     @Singleton
     fun provideUserRepo(): UserRepository {
         return UserRepository()
     }
+
     @Provides
     @Singleton
-    fun provideCategoriesRepo(): CategoriesRepository{
+    fun provideCategoriesRepo(): CategoriesRepository {
         return CategoriesRepository()
     }
 }

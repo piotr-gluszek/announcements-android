@@ -1,5 +1,5 @@
 # announcements-android
-Consumer for REST API with simple announcements consisting of title, photo and description
+## Consumer for REST API with simple announcements consisting of title, photo and description
 
 
 <p align="center">
